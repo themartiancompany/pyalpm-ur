@@ -7,8 +7,9 @@ pkgdesc="Python 3 bindings for libalpm"
 arch=('x86_64')
 url="https://gitlab.archlinux.org/archlinux/pyalpm"
 license=('GPL')
-makedepends=('git' 'python-setuptools' 'python-pytest' 'python-pkgconfig' 'python-pytest-pacman')
 depends=('python' 'pacman')
+makedepends=('git' 'python-setuptools' 'python-pkgconfig' 'python-build' 'python-installer' 'python-wheel')
+checkdepends=('python-pytest' 'python-pytest-pacman')
 source=("git+https://gitlab.archlinux.org/archlinux/pyalpm.git#tag=$pkgver")
 validpgpkeys=('E499C79F53C96A54E572FEE1C06086337C50773E')
 sha512sums=('SKIP')
@@ -19,7 +20,7 @@ prepare() {
 
 build() {
   cd "${pkgname}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -29,5 +30,5 @@ check() {
 
 package() {
   cd "${pkgname}"
-  python setup.py install --root=${pkgdir}
+  python -m installer --destdir="$pkgdir" dist/*.whl
 }
